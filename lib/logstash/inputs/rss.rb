@@ -28,7 +28,7 @@ class LogStash::Inputs::Rss < LogStash::Inputs::Base
 
   public
   def register
-    @logger.info("Registering RSS Input", :url => @url, :interval => @interval)
+    @logger.info("v7 Registering RSS Input", :url => @url, :interval => @interval)
   end # def register
 
   public
@@ -65,7 +65,7 @@ class LogStash::Inputs::Rss < LogStash::Inputs::Base
       feed = RSS::Parser.parse(body)
       feed.items.each do |item|
         # Put each item into an event
-        @logger.debug("Item", :item => item.author)
+        #@logger.debug("Item", :item => item.author)
         case feed.feed_type
         when 'rss'
           handle_rss_response(queue, item)
@@ -101,8 +101,8 @@ class LogStash::Inputs::Rss < LogStash::Inputs::Base
       # Author is actually a recommended field, not not a mandatory 
       # one, see https://validator.w3.org/feed/docs/atom.html for details.
       ##
-      event.set("author", item.author.name.content) if !item.author.nil?
-      event.set("published", item.published.content) if !item.published.nil?
+      #event.set("author", item.author.name.content) if !item.author.nil?
+      #event.set("published", item.published.content) if !item.published.nil?
 
       decorate(event)
       queue << event
@@ -111,10 +111,10 @@ class LogStash::Inputs::Rss < LogStash::Inputs::Base
   def handle_rss_response(queue, item)
     @codec.decode(item.description) do |event|
       event.set("Feed",  @url)
-      event.set("published", item.pubDate)
+      #event.set("published", item.pubDate)
       event.set("title", item.title)
       event.set("link", item.link)
-      event.set("author", item.author) if !item.author.nil?
+      # event.set("author", item.author) if !item.author.nil?
       decorate(event)
       queue << event
     end
