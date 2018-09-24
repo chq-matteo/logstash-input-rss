@@ -114,7 +114,7 @@ class LogStash::Inputs::Rss < LogStash::Inputs::Base
       event.set("published", item.pubDate)
       event.set("title", item.title)
       event.set("link", item.link)
-      event.set("author", item.author)
+      event.set("author", item.author) if !item.author.nil?
       decorate(event)
       queue << event
     end
